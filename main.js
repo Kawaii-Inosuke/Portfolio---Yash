@@ -133,3 +133,38 @@ function type() {
 }
 
 document.addEventListener('DOMContentLoaded', type);
+
+// Contact Form Handler
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Get form data
+        const formData = new FormData(contactForm);
+        const name = formData.get('user_name');
+        const email = formData.get('user_email');
+        const message = formData.get('message');
+        
+        // Create mailto link (this will open user's email client)
+        const subject = encodeURIComponent(`Portfolio Contact: ${name}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+        const mailtoLink = `mailto:rathoreyashodhansingh@gmail.com?subject=${subject}&body=${body}`;
+        
+        // Open email client
+        window.location.href = mailtoLink;
+        
+        // Show success message
+        const submitButton = contactForm.querySelector('.btn-send');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Opening Email...';
+        submitButton.disabled = true;
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            contactForm.reset();
+        }, 2000);
+    });
+}
