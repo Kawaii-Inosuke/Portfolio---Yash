@@ -137,10 +137,6 @@ The contact form uses a `mailto:` link that opens the user's default email clien
 - Safari (latest)
 - Edge (latest)
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
 ## 👤 Author
 
 **Yashodhan Singh Rathore**
