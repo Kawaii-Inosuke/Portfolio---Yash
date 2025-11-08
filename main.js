@@ -1,6 +1,36 @@
 const navLinks = document.querySelectorAll('.ul-list li a');
 const sections = document.querySelectorAll('section');
 
+// Create backToTop button early so it can be used in scroll listener
+const backToTop = document.createElement('div');
+backToTop.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
+backToTop.id = "back-to-top";
+document.body.appendChild(backToTop);
+
+backToTop.style.cssText = `
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: #474af0;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+`;
+
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+backToTop.addEventListener('mouseover', () => backToTop.style.transform = 'scale(1.2)');
+backToTop.addEventListener('mouseout', () => backToTop.style.transform = 'scale(1)');
+
 function removeActive() {
   navLinks.forEach(link => link.parentElement.classList.remove('active'));
 }
@@ -69,35 +99,6 @@ if (document.readyState === 'loading') {
   fadeInOnLoad();
 }
 
-const backToTop = document.createElement('div');
-backToTop.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
-backToTop.id = "back-to-top";
-document.body.appendChild(backToTop);
-
-backToTop.style.cssText = `
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  background: #474af0;
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.3s ease;
-`;
-
-backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-backToTop.addEventListener('mouseover', () => backToTop.style.transform = 'scale(1.2)');
-backToTop.addEventListener('mouseout', () => backToTop.style.transform = 'scale(1)');
-
 const cards = document.querySelectorAll('.project-card, .c1, .service-card');
 cards.forEach(card => {
   card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-8px) scale(1.05)');
@@ -112,6 +113,8 @@ let isDeleting = false;
 let typingSpeed = 100;
 
 function type() {
+    if (!typingElement) return; // Safety check
+    
     const currentWord = words[wordIndex];
     let displayedText = currentWord.substring(0, charIndex);
     
@@ -177,33 +180,4 @@ if (contactForm) {
       submitButton.disabled = false;
     }, 2000);
   });
-}
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        const name = formData.get('user_name');
-        const email = formData.get('user_email');
-        const message = formData.get('message');
-        
-        // Create mailto link (this will open user's email client)
-        const subject = encodeURIComponent(`Portfolio Contact: ${name}`);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-        const mailtoLink = `mailto:rathoreyashodhansingh@gmail.com?subject=${subject}&body=${body}`;
-        
-        // Open email client
-        window.location.href = mailtoLink;
-        
-        // Show success message
-        const submitButton = contactForm.querySelector('.btn-send');
-        const originalText = submitButton.textContent;
-        submitButton.textContent = 'Opening Email...';
-        submitButton.disabled = true;
-        
-        // Reset button after 2 seconds
-        setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-            contactForm.reset();
-        }, 2000);
-    });
 }
