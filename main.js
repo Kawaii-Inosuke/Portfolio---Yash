@@ -134,11 +134,50 @@ function type() {
 
 document.addEventListener('DOMContentLoaded', type);
 
-// Contact Form Handler
+// Contact Form Handler (Netlify + No Reload)
 const contactForm = document.getElementById('contact-form');
+
 if (contactForm) {
-    contactForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+  contactForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(contactForm);
+
+    // Add hidden Netlify form name (required for detection)
+    formData.append("form-name", "contact");
+
+    const encodedData = new URLSearchParams(formData).toString();
+
+    const submitButton = contactForm.querySelector('.btn-send');
+    const originalText = submitButton.textContent;
+
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encodedData,
+      });
+
+      if (response.ok) {
+        submitButton.textContent = 'Message Sent!';
+        contactForm.reset();
+      } else {
+        submitButton.textContent = 'Error!';
+      }
+    } catch (error) {
+      console.error(error);
+      submitButton.textContent = 'Failed!';
+    }
+
+    setTimeout(() => {
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    }, 2000);
+  });
+}
         
         // Get form data
         const formData = new FormData(contactForm);
